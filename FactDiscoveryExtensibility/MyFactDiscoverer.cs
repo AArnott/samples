@@ -10,21 +10,21 @@
 
     public class MyFactDiscoverer : IXunitTestCaseDiscoverer
     {
-        public IEnumerable<IXunitTestCase> Discover(ITestCollection testCollection, IAssemblyInfo assembly, ITypeInfo testClass, IMethodInfo testMethod, IAttributeInfo factAttribute)
+        public IEnumerable<IXunitTestCase> Discover(ITestMethod testMethod, IAttributeInfo factAttribute)
         {
             var args = factAttribute.GetConstructorArguments();
             int start = (int)args.First();
             int length = (int)args.Last();
             for (int i = start; i < start + length; i++)
             {
-                yield return new MyTestCase(testCollection, assembly, testClass, testMethod, factAttribute, new object[] { i });
+                yield return new MyTestCase(testMethod, new object[] { i });
             }
         }
 
         private class MyTestCase : XunitTestCase
         {
-            public MyTestCase(ITestCollection testCollection, IAssemblyInfo assembly, ITypeInfo testClass, IMethodInfo testMethod, IAttributeInfo factAttribute, object[] arguments) :
-                base(testCollection, assembly, testClass, testMethod, factAttribute, arguments)
+            public MyTestCase(ITestMethod testMethod, object[] arguments) :
+                base(testMethod, arguments)
             {
             }
         }
